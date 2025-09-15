@@ -1,6 +1,6 @@
 # uvworkon
 
-A tiny helper to quickly activate **global UV-created virtual environments** by name just like conda.
+A tiny helper to quickly activate **global UV-created virtual environments** by name just like workon.
 
 ## Prerequisites
 - Windows + PowerShell (Other operations: to be continued.)
