@@ -3,33 +3,90 @@
 A tiny helper to quickly activate **global UV-created virtual environments** by name just like workon.
 
 ## Prerequisites
-- Windows + PowerShell (Other operations: to be continued.)
 - UV installed
 - A directory to store your global virtual environments
+- One of:
+  - Windows + PowerShell
+  - Linux + `bash` or `zsh`
 
 ## Setup
-1. Choose a folder to keep your global UV virtual environments, e.g. `D:\Dev\uv_venvs`.
-2. Create environments in that folder with UV. The simplest way: `uv venv <env_name>`. For advanced options (e.g., specify Python version), refer to the UV documentation.
-3. Move these three files into that folder:
-   - `uvworkon.ps1`
-   - `setup_uvworkon_alias.ps1`
-   - `uninstall_uvworkon_alias.ps1`
-4. Open PowerShell (pwsh) and run `.\setup_uvworkon_alias.ps1` to write the uvworkon function into your PowerShell profile (#region uvworkon initialize ... #endregion).
-5. Restart PowerShell.
+1. Choose a folder to keep your global UV virtual environments, e.g.:
+   - Windows: `D:\Dev\uv_venvs`
+   - Linux: `/opt/dev/uv_venvs` or `~/dev/uv_venvs`
+2. Create environments in that folder with UV. The simplest way:
+```bash
+uv venv <env_name>
+```
+3. Move the matching files into that folder.
+
+### Windows (PowerShell)
+Required files:
+- `uvworkon.ps1`
+- `setup_uvworkon_alias.ps1`
+- `uninstall_uvworkon_alias.ps1`
+
+Run:
+```powershell
+.\setup_uvworkon_alias.ps1
+```
+
+This writes the `uvworkon` function into your PowerShell profile. Restart PowerShell or run:
+```powershell
+. $PROFILE
+```
+
+### Linux (`bash` / `zsh`)
+Required files:
+- `uvworkon.sh`
+- `setup_uvworkon_alias.sh`
+- `uninstall_uvworkon_alias.sh`
+
+Run:
+```bash
+./setup_uvworkon_alias.sh
+```
+
+If `uv` is not already available in `PATH`, the setup script will prompt whether to install it via the latest `uv-custom` Gitee release before continuing.
+
+By default, the installer writes to:
+- `~/.bashrc` when the current shell is `bash`
+- `~/.zshrc` when the current shell is `zsh`
+- `~/.profile` as a fallback
+
+You can also target a specific rc file:
+```bash
+./setup_uvworkon_alias.sh --shell zsh
+./setup_uvworkon_alias.sh --rc-file ~/.bashrc
+```
+
+Then reload your shell:
+```bash
+source ~/.bashrc
+```
+or:
+```bash
+source ~/.zshrc
+```
 
 ## Usage
-- List available environments (folders with `Scripts\activate.bat` in the current directory):
-```powershell
+- List available environments:
+  - Windows looks for `Scripts\activate.bat`
+  - Linux looks for `bin/activate`
+```text
 uvworkon
 ```
 - Activate a specific environment:
-```powershell
+```text
 uvworkon <env_name>
 ```
 
 ## Uninstall
-Remove the alias block from your PowerShell profile:
+### Windows
 ```powershell
 .\uninstall_uvworkon_alias.ps1
 ```
 
+### Linux
+```bash
+./uninstall_uvworkon_alias.sh
+```
