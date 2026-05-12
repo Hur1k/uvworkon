@@ -12,10 +12,11 @@ DEFAULT_UV_VERSION="0.7.19"
 FORCE=0
 TARGET_RC_FILE=
 TARGET_SHELL=
+INSTALL_UV_MODE=${UVWORKON_INSTALL_UV:-prompt}
 
 usage() {
     cat <<'EOF'
-Usage: ./setup_uvworkon_alias.sh [--force] [--shell bash|zsh|profile] [--rc-file PATH]
+Usage: ./setup_uvworkon_alias.sh [--force] [--install-uv|--no-install-uv] [--shell bash|zsh|profile] [--rc-file PATH]
 EOF
 }
 
@@ -149,6 +150,31 @@ ensure_uv_available() {
 
     echo "[!] uv command not found in PATH."
 
+    case "$INSTALL_UV_MODE" in
+        always)
+            install_uv || return 1
+            ;;
+        never)
+            echo "[!] Skipping uv installation. You can install it later."
+            return 0
+            ;;
+        prompt)
+            ;;
+        *)
+            echo "error: unsupported UV install mode: $INSTALL_UV_MODE" >&2
+            return 1
+            ;;
+    esac
+
+    if [ "$INSTALL_UV_MODE" = "always" ]; then
+        if command_exists uv; then
+            echo "[!] uv installation completed successfully."
+        else
+            echo "[!] uv installer finished. If 'uv' is still unavailable, reload your shell or reopen the terminal."
+        fi
+        return 0
+    fi
+
     if [ ! -t 0 ]; then
         echo "[!] Non-interactive shell detected, skipping automatic uv installation."
         echo "[!] You can install uv later and uvworkon will still work after that."
@@ -183,6 +209,14 @@ while [ $# -gt 0 ]; do
     case "$1" in
         -f|--force)
             FORCE=1
+            shift
+            ;;
+        --install-uv)
+            INSTALL_UV_MODE=always
+            shift
+            ;;
+        --no-install-uv)
+            INSTALL_UV_MODE=never
             shift
             ;;
         --shell)

@@ -41,12 +41,35 @@ Required files:
 - `setup_uvworkon_alias.sh`
 - `uninstall_uvworkon_alias.sh`
 
+Quick install with one command:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Hur1k/uvworkon/main/install.sh | bash
+```
+
+If GitHub raw access is slow or blocked:
+```bash
+curl -fsSL https://gh-proxy.com/https://raw.githubusercontent.com/Hur1k/uvworkon/main/install.sh | bash
+```
+
+By default this installs the scripts into `~/.local/uv_venvs`, and that directory also becomes `UVWORKON_HOME`.
+Create or move your UV environments under that directory, or override it when installing:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Hur1k/uvworkon/main/install.sh | env UVWORKON_INSTALL_DIR="$HOME/dev/uv_venvs" bash
+```
+
+You can still forward setup options:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Hur1k/uvworkon/main/install.sh | bash -s -- --shell zsh
+```
+
 Run:
 ```bash
 ./setup_uvworkon_alias.sh
 ```
 
 If `uv` is not already available in `PATH`, the setup script will prompt whether to install it via the latest `uv-custom` Gitee release before continuing.
+
+For non-interactive installs, use `install.sh` or pass `--install-uv` explicitly. `install.sh` defaults to automatic `uv` installation when `uv` is missing.
 
 By default, the installer writes to:
 - `~/.bashrc` when the current shell is `bash`
